@@ -71,7 +71,7 @@ else:
 
 print(main_packages)
 
-with open("requirements.txt", "w") as requirements_file:
+with open("Requirements.txt", "w") as requirements_file:
     for package in main_packages:
         if package == "python":
             python_version = f"{package} == {sys.version}\n"
