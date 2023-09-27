@@ -1,10 +1,17 @@
 # Requirements.txt_generator
-You have written your Python script and want to upload it to GitHub.
-But you need to include a "Requirements.txt" file so the other users know which packages have been used in your script.
+If you've written a Python script and want to share it on GitHub, it's essential to include a "Requirements.txt" file. This file lists all the packages and their version numbers required to run your script. This tool is designed to simplify that process for you.
 
-I'm here to make your life easier. Simply copy this script into the folder containing the python script(s) for which the requirements are needed to be extracted and execute it. A "Requirements.txt" file will be generated with the package name and associated version number.s
 
-## Instructions
-1. Copy the script to folder with python scripts
-2. Run the program. It will recursively walk through all folders and subfolders
-3. Open "Requirements.txt"
+## How to Use
+
+Follow these simple steps to generate a "Requirements.txt" file for your project:
+
+1. **Copy the Script**: Copy the provided script into the folder containing your Python script(s) for which you need to extract the requirements.
+
+2. **Run the Program**: Execute the script. It will recursively search through all subfolders to identify the packages used in your Python scripts.
+
+3. **Access Your "Requirements.txt"**: After running the script, you'll find a "Requirements.txt" file generated in the same directory. This file will contain the package names and their associated version numbers.
+
+Now, you can easily share your Python project on GitHub, ensuring that others can easily set up the required environment.
+
+Feel free to customize the generated "Requirements.txt" file as needed.
