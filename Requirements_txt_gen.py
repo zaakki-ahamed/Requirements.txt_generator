@@ -39,7 +39,7 @@ def is_default_package(package_name):
     return package_name in sys.modules or pkgutil.find_loader(package_name) is not None
 
 # Directory containing your Python scripts
-scripts_directory = "C:/Users/zaakk/OneDrive/Desktop/Python_work/Tor_Visit/"
+scripts_directory = "./"
 
 # List to collect imported packages
 imported_packages = []
@@ -47,7 +47,7 @@ imported_packages = []
 # Collect imported packages from all Python scripts in the directory
 for root, _, files in os.walk(scripts_directory):
     for file in files:
-        if file.endswith(".py"):
+        if file.endswith(".py") and file != os.path.basename(__file__):
             script_path = os.path.join(root, file)
             collect_imports(script_path, imported_packages)
 
