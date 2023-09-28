@@ -2,8 +2,17 @@ import ast
 import importlib_metadata
 import os
 import re
-import pkgutil
 import sys
+import distutils.sysconfig as sysconfig
+import os
+import sys
+
+# Directory containing your Python scripts
+scripts_directory = "./"
+
+# Create or update requirements.txt file
+display_only_main_package = True  # Set to True to only display main package names
+show_default_packages = True  # Set to True to display all packages, including default ones
 
 # Function to recursively collect imported modules/packages
 def collect_imports(file_path, collected_imports):
@@ -33,13 +42,30 @@ def get_package_version(package_name):
         return importlib_metadata.version(package_name)
     except importlib_metadata.PackageNotFoundError:
         return None
+    
+#Get list of Default python libraries
+#Credit - https://stackoverflow.com/a/8992937
+# std_lib = sysconfig.get_python_lib(standard_lib=True)
 
-# Function to check if a package is part of the default Python installation
+""" #Print default package list
+for top, dirs, files in os.walk(std_lib):
+    for nm in files:
+        prefix = top[len(std_lib)+1:]
+        if prefix[:13] == 'site-packages':
+            continue
+        if nm == '__init__.py':
+            print(top[len(std_lib)+1:].replace(os.path.sep,'.'))
+        elif nm[-3:] == '.py':
+            print(os.path.join(prefix, nm)[:-3].replace(os.path.sep,'.'))
+        elif nm[-3:] == '.so' and top[-11:] == 'lib-dynload':
+            print(nm[0:-3]) """
+
+""" # Function to check if a package is part of the default Python installation
 def is_default_package(package_name):
-    return package_name in sys.modules or pkgutil.find_loader(package_name) is not None
+    if show_default_packages==False and package_name in sys.builtin_module_names:
+        return False
+    return package_name not in sys.builtin_module_names and (package_name in sys.modules or pkgutil.find_loader(package_name) is not None) """
 
-# Directory containing your Python scripts
-scripts_directory = "./"
 
 # List to collect imported packages
 imported_packages = []
@@ -54,11 +80,7 @@ for root, _, files in os.walk(scripts_directory):
 # Remove duplicates and sort
 imported_packages = sorted(set(imported_packages))
 
-# Create or update requirements.txt file
-display_only_main_package = True  # Set to True to only display main package names
-show_default_packages = True  # Set to True to display all packages, including default ones
 main_packages = set()
-#main_packages.add("python") # Add Python itself to the list #Redundant
 
 if display_only_main_package:
     # Use regular expressions to extract main package names
@@ -72,26 +94,22 @@ else:
 print(main_packages)
 
 with open("Requirements.txt", "w") as requirements_file:
+    #Print python version
     python_version = sys.version.split()[0]
     py = f"python == {python_version}\n"
     requirements_file.write(py)
     print(py)
     for package in main_packages:
-        #if package == "python":
-        #    python_version = sys.version.split()[0]  # Get only the Python version without the additional info
-        #    py = f"{package} == {python_version}\n"
-        #    #python_version = f"{package} == {sys.version}\n"
-        #    requirements_file.write(py)
-        #    print("python==",python_version)
+        if show_default_packages==False and (package in sys.builtin_module_names or package in sys.modules):
+            continue  # Skip default packages if show_default_packages is False
         version = get_package_version(package)
         if version:
-            package_version= f"{package} == {version}\n"
+            package_version = f"{package} == {version}\n"
             requirements_file.write(package_version)
             print(package_version)
         else:
-            package_name= f"{package}\n"
+            package_name = f"{package}\n"
             requirements_file.write(package_name)
             print(package_name)
-
 
 print("Requirements have been written to requirements.txt")
