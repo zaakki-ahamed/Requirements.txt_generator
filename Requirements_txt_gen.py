@@ -58,7 +58,7 @@ imported_packages = sorted(set(imported_packages))
 display_only_main_package = True  # Set to True to only display main package names
 show_default_packages = True  # Set to True to display all packages, including default ones
 main_packages = set()
-main_packages.add("python") # Add Python itself to the list
+#main_packages.add("python") # Add Python itself to the list #Redundant
 
 if display_only_main_package:
     # Use regular expressions to extract main package names
@@ -72,19 +72,26 @@ else:
 print(main_packages)
 
 with open("Requirements.txt", "w") as requirements_file:
+    python_version = sys.version.split()[0]
+    py = f"python == {python_version}\n"
+    requirements_file.write(py)
+    print(py)
     for package in main_packages:
-        if package == "python":
-            python_version = f"{package} == {sys.version}\n"
-            requirements_file.write(python_version)
-            print("python==",python_version)
+        #if package == "python":
+        #    python_version = sys.version.split()[0]  # Get only the Python version without the additional info
+        #    py = f"{package} == {python_version}\n"
+        #    #python_version = f"{package} == {sys.version}\n"
+        #    requirements_file.write(py)
+        #    print("python==",python_version)
         version = get_package_version(package)
         if version:
-            package_version= f"{package}=={version}\n"
+            package_version= f"{package} == {version}\n"
             requirements_file.write(package_version)
             print(package_version)
         else:
             package_name= f"{package}\n"
             requirements_file.write(package_name)
             print(package_name)
+
 
 print("Requirements have been written to requirements.txt")
